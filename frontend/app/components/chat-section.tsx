@@ -25,10 +25,9 @@ function useChat({api}) {
     console.log("Messages after user input:", [...messages, userMessage]); // Log para verificar el estado de los mensajes
 
     try {
-      // Enviar la solicitud al backend en Python
-      //http://localhost:8000/api/chat
       //${process.env.REACT_APP_BACKEND_URL}/ai
-      const response = await fetch('http://localhost:8000/ai', { 
+      //http://localhost:8000/ai
+      const response = await fetch('${process.env.REACT_APP_BACKEND_URL}/ai', { // Enviar la solicitud al backend en Python
         method: "POST",
         headers: {
           "Content-Type": "application/json",
