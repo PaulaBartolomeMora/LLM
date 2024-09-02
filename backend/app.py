@@ -83,12 +83,10 @@ async def chat(input_model: InputModel):
     template = "User: {question}\nBot:"
     prompt = PromptTemplate(template=template, input_variables=['question'])
 
-    # Create the processing chain
     chain = LLMChain(llm=llm, prompt=prompt)
     
     try:
-        # Get the response from the model
-        response = chain.run(question=input_model.input)
+        response = chain.invoke(question=input_model.input) 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
