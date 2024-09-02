@@ -27,7 +27,7 @@ function useChat({api}) {
     try {
       //${process.env.REACT_APP_BACKEND_URL}/ai
       //http://localhost:8000/ai
-      const response = await fetch('${process.env.REACT_APP_BACKEND_URL}/ai', { // Enviar la solicitud al backend en Python
+      const response = await fetch('http://localhost:8000/ai', { // Enviar la solicitud al backend en Python
         method: "POST",
         headers: {
           "Content-Type": "application/json",
