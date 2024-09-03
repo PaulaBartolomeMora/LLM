@@ -57,7 +57,7 @@ async def chat(input_model: InputModel):
         raise HTTPException(status_code=400, detail="No input provided")
 
     template = "User: {question}\nBot:"
-    prompt = PromptTemplate(template=template, input_variables=['question'])
+    prompt = PromptTemplate(template=template, input_variables=['input'])
 
     chain = LLMChain(llm=llm, prompt=prompt)
     
