@@ -69,7 +69,7 @@ async def chat(input_model: InputModel):
         logger.error(f"Error during LLMChain invocation: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
     
-    return {"response": response.strip()}
+    return {"response": str(response).strip()}
 
 
 if __name__ == "__main__":
