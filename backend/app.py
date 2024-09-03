@@ -63,13 +63,14 @@ async def chat(input_model: InputModel):
     
     try:
         logger.info(f"Invoking LLMChain with input: {input_model.input}")
-        response = chain.run(input_model.input)          
-        logger.info(f"Received response: {response}")
+        response = chain.invoke(input_model.input)  
+        response_text = response.get('text', 'No response text found')        
+        logger.info(f"Received response: {response_text}")
     except Exception as e:
         logger.error(f"Error during LLMChain invocation: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
     
-    return {"response": response.strip()}
+    return {"response": response_text.strip()}
 
 
 if __name__ == "__main__":
