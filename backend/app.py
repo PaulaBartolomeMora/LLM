@@ -56,14 +56,14 @@ async def chat(input_model: InputModel):
     if not input_model.input:
         raise HTTPException(status_code=400, detail="No input provided")
 
-    template = "User: {question}\nBot:"
+    template = "User: {input}\nBot:"
     prompt = PromptTemplate(template=template, input_variables=['input'])
 
     chain = LLMChain(llm=llm, prompt=prompt)
     
     try:
         logger.info(f"Invoking LLMChain with input: {input_model.input}")
-        response = chain(input_model.input) 
+        response = chain.run(input_model.input)          
         logger.info(f"Received response: {response}")
     except Exception as e:
         logger.error(f"Error during LLMChain invocation: {str(e)}")
