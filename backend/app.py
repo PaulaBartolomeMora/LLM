@@ -32,7 +32,8 @@ app = FastAPI()
 
 app.add_middleware( # Configurar CORS
     CORSMiddleware,
-    allow_origins=["*"],  # Permitir todas las URLs de origen. Puedes restringir esto a dominios específicos si lo prefieres.
+    allow_origins=["*"],    
+    #allow_origins=[os.getenv("ALLOWED_ORIGINS", "")],  # Permitir todas las URLs de origen. Puedes restringir esto a dominios específicos si lo prefieres.
     allow_credentials=True,
     allow_methods=["*"],  # Permitir todos los métodos HTTP.
     allow_headers=["*"],  # Permitir todos los encabezados HTTP.
@@ -52,7 +53,14 @@ def home():
     return {"response": "hola home"}
 
 @app.post("/ai")
-async def chat(input_model: InputModel):
+async def chat(request: Request, input_model: InputModel):
+    
+    origin = request.headers.get("origin")
+    ip = request.headers.get("x-forwarded-for")
+    ip = ip.split(",")[0].strip()
+    
+    logger.info(f"Request received from: {origin} with IP: {ip}")
+    
     if not input_model.input:
         raise HTTPException(status_code=400, detail="No input provided")
 
