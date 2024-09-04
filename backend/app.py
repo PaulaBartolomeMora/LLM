@@ -53,7 +53,16 @@ def home():
     return {"response": "hola home"}
 
 @app.post("/ai")
-async def chat(input_model: InputModel):
+async def chat(request: Request, input_model: InputModel):
+    
+    origin = request.headers.get("origin")
+    referer = request.headers.get("referer")
+    
+    if origin:
+        logger.info(f"Request received from origin: {origin}")
+    if referer:
+        logger.info(f"Request received with referer: {referer}")
+    
     if not input_model.input:
         raise HTTPException(status_code=400, detail="No input provided")
 
