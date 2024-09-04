@@ -61,8 +61,8 @@ async def chat(request: Request, input_model: InputModel):
     
     logger.info(f"Request received from origin: {origin} or referer: {referer}")
     
-    client_ip = client_ip.split(",")[0].strip()
-    logger.info(f"Request received from IP: {client_ip}")
+    ip = ip.split(",")[0].strip()
+    logger.info(f"Request received from IP: {ip}")
     
     if not input_model.input:
         raise HTTPException(status_code=400, detail="No input provided")
