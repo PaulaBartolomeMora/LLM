@@ -57,7 +57,7 @@ function useChat({api}) {
   const handleInputChange = (event) => {
     console.log("handleInputChange called"); // Log para verificar cuándo se llama a handleInputChange
     setInput(event.target.value);
-    console.log("New input value:", event.target.value); // Log para ver el nuevo valor de input
+    console.log("New input value:", event.target.value);
   };
 
   const addTagToMessage = async (messageId, tag) => {
@@ -66,7 +66,7 @@ function useChat({api}) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer YOUR_API_KEY`,  // Reemplaza con tu clave de API
+          Authorization: `Bearer ${process.env.LANGCHAIN_API_KEY}`,  
         },
         body: JSON.stringify({ tag }),
       });
