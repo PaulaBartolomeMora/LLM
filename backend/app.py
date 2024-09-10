@@ -9,6 +9,7 @@ import uvicorn
 
 from starlette.requests import Request
 from pydantic import BaseModel
+import httpx
 
 from langchain_groq import ChatGroq
 from langchain.chains import LLMChain
@@ -71,14 +72,40 @@ async def chat(request: Request, input_model: InputModel):
     
     try:
         logger.info(f"Invoking LLMChain with input: {input_model.input}")
-        response = chain.invoke(input_model.input, callbacks=[tracer])  
+        response = chain.invoke(input_model.input, callbacks=[tracer]) 
         response_text = response.get('text', 'No response text found')        
         logger.info(f"Received response: {response_text}")
     except Exception as e:
         logger.error(f"Error during LLMChain invocation: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
     
+    if input_model.tags:
+        await add_tags_to_message(input_model.tags)
+    
     return {"response": response_text.strip()}
+
+
+async def add_tags_to_message(tags: list[str]):
+    api_key = os.getenv('LANGCHAIN_API_KEY')  
+    url = os.getenv('LANGCHAIN_TAGS')   
+
+    for tag in tags:
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    url,
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {api_key}",
+                    },
+                    json={"tag": tag},
+                )
+            response.raise_for_status()
+            logger.info(f"Tag {tag} added successfully.")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"HTTP error while adding tag {tag}: {str(e)}")
+        except Exception as e:
+            logger.error(f"Unexpected error while adding tag {tag}: {str(e)}")
 
 
 if __name__ == "__main__":
