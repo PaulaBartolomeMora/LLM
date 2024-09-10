@@ -7,10 +7,11 @@ export default function ChatItem({
   id,
   content,
   role,
-  addTagToMessage, 
+  addTagToMessage,
 }: Message & { addTagToMessage?: (messageId: string, tag: string) => void }) {
   return (
     <div className="flex items-start gap-4 pt-5">
+      {/* Pasamos solo role a ChatAvatar */}
       <ChatAvatar role={role} />
       <div>
         <p className="break-words">{content}</p>

@@ -1,6 +1,5 @@
 "use client";
 
-//import { useChat } from "ai/react";
 import { ChatInput, ChatMessages } from "./ui/chat";
 import React, { useState } from "react"; // Importa React y useState
 

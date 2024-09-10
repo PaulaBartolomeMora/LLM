@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Message } from "./chat-messages";
 
-export default function ChatAvatar({ id, content, role }: Message) {
+export default function ChatAvatar({ role }: { role: string }) {
   if (role === "user") {
     return (
       <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow bg-background">
