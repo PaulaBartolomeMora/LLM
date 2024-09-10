@@ -42,7 +42,7 @@ function useChat({api}) {
       console.log("Response from API:", data);
 
       // Agregar la respuesta del bot al estado
-      const botMessage = { role: "bot", content: data.response };
+      const botMessage = { role: "bot", content: data.response, id: data.id };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
       console.log("Messages after bot response:", [...messages, botMessage]); // Log para verificar el estado de los mensajes después de la respuesta del bot
 
@@ -61,6 +61,27 @@ function useChat({api}) {
     console.log("New input value:", event.target.value); // Log para ver el nuevo valor de input
   };
 
+  const addTagToMessage = async (messageId, tag) => {
+    try {
+      const response = await fetch(`https://api.langsmith.com/messages/${messageId}/tags`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer YOUR_API_KEY`,  // Reemplaza con tu clave de API
+        },
+        body: JSON.stringify({ tag }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error adding tag: ${response.status}`);
+      }
+
+      console.log(`Tag ${tag} added to message with ID: ${messageId}`);
+    } catch (error) {
+      console.error("Error adding tag:", error);
+    }
+  };
+
   const reload = () => {
     // Implementación ficticia de recarga
   };
@@ -75,6 +96,7 @@ function useChat({api}) {
     isLoading,
     handleSubmit,
     handleInputChange,
+    addTagToMessage,
     reload,
     stop,
   };
@@ -89,6 +111,7 @@ export default function ChatSection() {
     isLoading,
     handleSubmit,
     handleInputChange,
+    addTagToMessage,
     reload,
     stop,
   } = useChat({ api: process.env.NEXT_PUBLIC_CHAT_API });
@@ -100,6 +123,7 @@ export default function ChatSection() {
         isLoading={isLoading}
         reload={reload}
         stop={stop}
+        addTagToMessage={addTagToMessage}
       />
       <ChatInput
         input={input}

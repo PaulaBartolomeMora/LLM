@@ -14,11 +14,13 @@ export default function ChatMessages({
   isLoading,
   reload,
   stop,
+  addTagToMessage, 
 }: {
   messages: Message[];
   isLoading?: boolean;
   stop?: () => void;
   reload?: () => void;
+  addTagToMessage: (messageId: string, tag: string) => void; 
 }) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -40,7 +42,11 @@ export default function ChatMessages({
         ref={scrollableChatContainerRef}
       >
         {messages.map((m: Message) => (
-          <ChatItem key={m.id} {...m} />
+          <ChatItem
+            key={m.id}
+            {...m}
+            addTagToMessage={addTagToMessage} //Se pasa la función
+          />
         ))}
       </div>
     </div>
