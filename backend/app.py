@@ -45,6 +45,7 @@ app.add_middleware( # Configurar CORS
 
 class InputModel(BaseModel):
     input: str
+    tags: list[str] = []
 
 #################################
 
