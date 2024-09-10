@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from langchain_groq import ChatGroq
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
+from langchain.callbacks.tracers import LangChainTracer 
 
 """from langchain_openai import OpenAI
 model = OpenAI(api_key=os.getenv('OPENAI_API_KEY'), temperature=0.7)
@@ -28,12 +29,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 llm = ChatGroq(model="llama3-70b-8192")
+tracer = LangChainTracer(project_name=os.enviroment["LANGCHAIN_PROJECT"]) #LANGCHAIN_PROJECT
+
 app = FastAPI()
 
 app.add_middleware( # Configurar CORS
     CORSMiddleware,
     allow_origins=["*"],    
-    #allow_origins=[os.getenv("ALLOWED_ORIGINS", "")],  # Permitir todas las URLs de origen. Puedes restringir esto a dominios específicos si lo prefieres.
+    #allow_origins=[os.getenv("ALLOWED_ORIGINS", "")],  
     allow_credentials=True,
     allow_methods=["*"],  # Permitir todos los métodos HTTP.
     allow_headers=["*"],  # Permitir todos los encabezados HTTP.
@@ -45,12 +48,9 @@ class InputModel(BaseModel):
 #################################
 
 @app.get("/")
-# """
-#   Página principal de la app
-# """
-
 def home():
     return {"response": "hola home"}
+
 
 @app.post("/ai")
 async def chat(request: Request, input_model: InputModel):
@@ -71,7 +71,7 @@ async def chat(request: Request, input_model: InputModel):
     
     try:
         logger.info(f"Invoking LLMChain with input: {input_model.input}")
-        response = chain.invoke(input_model.input)  
+        response = chain.invoke(input_model.input, callbacks=[tracer])  
         response_text = response.get('text', 'No response text found')        
         logger.info(f"Received response: {response_text}")
     except Exception as e:
