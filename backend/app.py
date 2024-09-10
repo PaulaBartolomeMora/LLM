@@ -29,7 +29,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 llm = ChatGroq(model="llama3-70b-8192")
-tracer = LangChainTracer(project_name=os.enviroment["LANGCHAIN_PROJECT"]) #LANGCHAIN_PROJECT
+tracer = LangChainTracer(project_name=os.environ["LANGCHAIN_PROJECT"]) #LANGCHAIN_PROJECT
 
 app = FastAPI()
 
